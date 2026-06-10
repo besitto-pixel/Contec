@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>노바렉스 투자분석 종합 리포트 | 2024 1Q ~ 2026 1Q</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=Noto+Serif+KR:wght@600;700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --paper:#FAFBF8; --card:#FFFFFF; --ink:#15241F; --muted:#67766E;
+  --green:#1E6B4F; --green-soft:#E8F1EC; --red:#C2452D; --red-soft:#F8ECE8;
+  --gold:#B07F23; --gold-soft:#F7F0E0; --line:#DCE4DE; --navy:#27435C;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans KR',sans-serif;font-size:14px;line-height:1.65;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+.mono{font-family:'IBM Plex Mono',monospace}
+
+/* ── header ── */
+header{border-bottom:3px solid var(--ink);padding:48px 0 28px;background:linear-gradient(180deg,#F2F6F1 0%,var(--paper) 100%)}
+.hd-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.22em;color:var(--green);text-transform:uppercase;margin-bottom:14px}
+h1{font-family:'Noto Serif KR',serif;font-weight:900;font-size:40px;line-height:1.25;letter-spacing:-0.01em}
+h1 .gx{color:var(--green)}
+.hd-sub{margin-top:12px;color:var(--muted);font-size:13.5px;max-width:760px}
+.hd-meta{display:flex;flex-wrap:wrap;gap:8px 26px;margin-top:22px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted)}
+.hd-meta b{color:var(--ink);font-weight:600}
+
+/* 데이터 출처 범례 — 시그니처 장치 */
+.legend{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;margin-top:22px;padding:12px 16px;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--green);font-size:12.5px}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:baseline}
+.dot.f{background:var(--green)}
+.dot.h{background:transparent;border:2px solid var(--gold)}
+.dot.w{background:var(--navy)}
+.tag-e{color:var(--gold);font-weight:600}
+sup.src{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--gold);font-weight:600}
+
+/* ── section scaffolding ── */
+section{padding:52px 0 8px}
+.sec-head{display:flex;align-items:baseline;gap:14px;border-bottom:2px solid var(--ink);padding-bottom:10px;margin-bottom:24px}
+.sec-no{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--green);letter-spacing:.15em}
+h2{font-family:'Noto Serif KR',serif;font-size:23px;font-weight:700}
+.sec-note{margin-left:auto;font-size:12px;color:var(--muted)}
+h3{font-size:15px;font-weight:600;margin:26px 0 12px;color:var(--ink)}
+h3 .u{font-weight:400;color:var(--muted);font-size:12px;margin-left:8px}
+
+/* ── KPI strip ── */
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:26px}
+.kpi{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--green);padding:16px 16px 14px}
+.kpi .l{font-size:11.5px;color:var(--muted);letter-spacing:.04em}
+.kpi .v{font-family:'IBM Plex Mono',monospace;font-size:24px;font-weight:600;margin-top:4px}
+.kpi .v small{font-size:13px;font-weight:500;color:var(--muted)}
+.kpi .d{font-family:'IBM Plex Mono',monospace;font-size:11.5px;margin-top:4px}
+.up{color:var(--green)} .dn{color:var(--red)} .nt{color:var(--muted)}
+
+/* ── tables ── */
+.tbl-wrap{overflow-x:auto;background:var(--card);border:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:760px}
+thead th{background:var(--ink);color:#F4F7F4;font-weight:500;font-size:12px;padding:9px 12px;text-align:right;white-space:nowrap;letter-spacing:.02em}
+thead th:first-child{text-align:left}
+tbody td{padding:8px 12px;border-bottom:1px solid var(--line);text-align:right;font-family:'IBM Plex Mono',monospace;font-size:12.5px;white-space:nowrap}
+tbody td:first-child{text-align:left;font-family:'IBM Plex Sans KR',sans-serif;font-weight:500;font-size:13px}
+tbody tr:nth-child(even){background:#F6F8F5}
+tbody tr.hl{background:var(--green-soft)}
+tbody tr.warn-row{background:var(--gold-soft)}
+.tnote{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.7}
+.tnote b{color:var(--ink)}
+
+/* ── charts ── */
+.chart-card{background:var(--card);border:1px solid var(--line);padding:20px 20px 12px;margin-top:16px}
+.chart-card .ct{font-size:13px;font-weight:600;margin-bottom:4px}
+.chart-card .cs{font-size:11.5px;color:var(--muted);margin-bottom:10px}
+.chart-box{position:relative;height:320px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
+/* ── callouts / cards ── */
+.note{background:var(--green-soft);border-left:4px solid var(--green);padding:14px 18px;margin:18px 0;font-size:13px}
+.note.warn{background:var(--gold-soft);border-left-color:var(--gold)}
+.note.risk{background:var(--red-soft);border-left-color:var(--red)}
+.risk-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.risk-card{background:var(--card);border:1px solid var(--line);padding:16px 18px}
+.risk-card .rt{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.risk-card .badge{font-family:'IBM Plex Mono',monospace;font-size:10.5px;padding:2px 8px;border-radius:2px;font-weight:600;letter-spacing:.06em}
+.b-high{background:var(--red);color:#fff}
+.b-mid{background:var(--gold);color:#fff}
+.b-low{background:var(--green);color:#fff}
+.risk-card .rn{font-weight:600;font-size:14px}
+.risk-card p{font-size:12.5px;color:#3C4A43;line-height:1.7}
+.risk-card .quote{margin-top:8px;font-size:12px;color:var(--muted);border-left:2px solid var(--line);padding-left:10px}
+
+/* timeline (일회성 요인) */
+.tl{border-left:2px solid var(--green);margin:8px 0 8px 6px;padding-left:24px}
+.tl-item{position:relative;padding-bottom:22px}
+.tl-item:before{content:'';position:absolute;left:-30px;top:5px;width:10px;height:10px;border-radius:50%;background:var(--paper);border:3px solid var(--green)}
+.tl-item.neg:before{border-color:var(--red)}
+.tl-item.caution:before{border-color:var(--gold)}
+.tl-item .td{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.05em}
+.tl-item .tt{font-weight:600;font-size:14px;margin:2px 0}
+.tl-item p{font-size:12.5px;color:#3C4A43}
+
+/* quarter summary */
+.q-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.q-card{background:var(--card);border:1px solid var(--line);padding:16px}
+.q-card .qh{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:10px}
+.q-card .qn{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:15px}
+.q-card .qv{font-family:'IBM Plex Mono',monospace;font-size:11px}
+.q-card p{font-size:12.5px;color:#3C4A43;line-height:1.7}
+
+/* valuation */
+.val-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}
+.val-card{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--navy);padding:14px 16px}
+.val-card .l{font-size:11.5px;color:var(--muted)}
+.val-card .v{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;margin-top:3px}
+.val-card .s{font-size:11px;color:var(--muted);margin-top:3px}
+
+.verdict{background:var(--ink);color:#EDF3EE;padding:28px 30px;margin:26px 0 10px}
+.verdict h3{color:#fff;margin:0 0 10px;font-family:'Noto Serif KR',serif;font-size:18px}
+.verdict p{font-size:13px;color:#C9D6CD;line-height:1.8}
+.verdict .pill{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;background:var(--green);color:#fff;padding:3px 12px;border-radius:2px;margin:10px 8px 0 0}
+.verdict .pill.y{background:var(--gold)}
+
+footer{margin-top:60px;border-top:2px solid var(--ink);padding:24px 0 48px;font-size:11.5px;color:var(--muted);font-family:'IBM Plex Mono',monospace;line-height:1.9}
+
+@media(max-width:880px){
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .grid2,.risk-grid{grid-template-columns:1fr}
+  .q-grid{grid-template-columns:1fr}
+  .val-grid{grid-template-columns:repeat(2,1fr)}
+  h1{font-size:30px}
+}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="hd-eyebrow">Investment Research · Health-Functional Food ODM/OEM · KOSDAQ 194700</div>
+    <h1>㈜노바렉스 <span class="gx">9개 분기 종합 투자분석</span><br>2024 1Q — 2026 1Q</h1>
+    <div class="hd-sub">건강기능식품 전문 ODM/OEM. 개별인정형 원료 48건(업계 1위) 보유. 내수 부진의 2024년에서 수출 주도 퀀텀점프의 2025~2026년으로 — DART 분기·사업보고서 9건 기반 분석.</div>
+    <div class="hd-meta">
+      <span>분석기간 <b>2024.01 ~ 2026.03 (9개 분기)</b></span>
+      <span>회계기준 <b>연결 (26년 1Q부터 개별)</b></span>
+      <span>감사인 <b>삼일회계법인 → 삼정(26년~)</b></span>
+      <span>작성기준일 <b>2026.06.10</b></span>
+    </div>
+    <div class="legend">
+      <span><span class="dot f"></span><b>보고서 명시 수치</b> — DART 공시 보고서에 직접 기재된 값</span>
+      <span><span class="dot h"></span><b class="tag-e">산출·추정치 <sup class="src">E</sup></b> — 명시 수치 간 차감·비율 계산 등으로 도출 (예: 분기 단독 = 누적 − 전 누적)</span>
+      <span><span class="dot w"></span><b>외부(웹) 자료</b> — 주가·증권사 전망 등 공시 외 출처</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ───────────────────────── 01 핵심 재무지표 · 누적 ───────────────────────── -->
+<section id="s1">
+  <div class="sec-head"><span class="sec-no">01</span><h2>핵심 재무지표 — 분기 누적 기준</h2><span class="sec-note">단위: 억원 · 연결 기준 (26년 1Q는 개별)</span></div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="l">2025 연간 매출액</div><div class="v">4,043<small> 억원</small></div><div class="d up">▲ +35.8% YoY · 창사 최대</div></div>
+    <div class="kpi"><div class="l">2025 영업이익</div><div class="v">431<small> 억원</small></div><div class="d up">▲ +85.7% YoY · OPM 10.7%</div></div>
+    <div class="kpi"><div class="l">2026 1Q 매출액 (개별)</div><div class="v">1,208<small> 억원</small></div><div class="d up">▲ +33.2% YoY</div></div>
+    <div class="kpi"><div class="l">2026 1Q 영업이익률</div><div class="v">11.7<small> %</small></div><div class="d up">▲ +2.4%p YoY · 분기 최고</div></div>
+    <div class="kpi"><div class="l">2025 결산 주당배당금</div><div class="v">400<small> 원</small></div><div class="d up">▲ 전년 200원 대비 2배</div></div>
+  </div>
+
+  <h3>누적 손익 추이 <span class="u">각 보고서 명시 수치 중심 · YoY는 전년 동일누적 대비</span></h3>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr>
+      <th>누적 기간</th><th>매출액</th><th>YoY</th><th>영업이익</th><th>YoY</th><th>순이익</th><th>YoY</th><th>영업이익률</th><th>YoY(%p)</th>
+    </tr></thead>
+    <tbody>
+      <tr><td>2024 1Q</td><td>565</td><td class="dn">−18.3%</td><td>35.6</td><td class="dn">−28.3%</td><td>38.7</td><td class="dn">−8.9%</td><td>6.3%</td><td class="dn">−0.9</td></tr>
+      <tr><td>2024 상반기</td><td>1,383</td><td class="dn">−4.8%</td><td>109</td><td class="dn">−10.7%</td><td>110</td><td class="up">+4.8%</td><td>7.9%</td><td class="dn">−0.5</td></tr>
+      <tr><td>2024 1~3Q</td><td>2,156</td><td class="dn">−4.5%</td><td>164</td><td class="dn">−17.2%</td><td>145</td><td class="dn">−15.8%</td><td>7.6%</td><td class="dn">−1.2</td></tr>
+      <tr><td>2024 연간</td><td>2,977</td><td class="dn">−1.5%</td><td>232</td><td class="dn">−9.1%</td><td>238</td><td class="up">+8.5%</td><td>7.8%</td><td class="dn">−0.6</td></tr>
+      <tr class="hl"><td>2025 1Q</td><td>907</td><td class="up">+60.4%</td><td>84</td><td class="up">+136.2%</td><td>72</td><td class="up">+86.8%</td><td>9.3%</td><td class="up">+3.0</td></tr>
+      <tr class="hl"><td>2025 상반기</td><td>1,898</td><td class="up">+37.2%<sup class="src">E</sup></td><td>194</td><td class="up">+78.4%<sup class="src">E</sup></td><td>148*</td><td class="up">+38.5%</td><td>10.2%</td><td class="up">+2.3<sup class="src">E</sup></td></tr>
+      <tr class="hl"><td>2025 1~3Q</td><td>3,036</td><td class="up">+40.8%</td><td>323</td><td class="up">+96.7%</td><td>274</td><td class="up">+89.8%</td><td>10.7%</td><td class="up">+3.1</td></tr>
+      <tr class="hl"><td>2025 연간</td><td>4,043</td><td class="up">+35.8%</td><td>431</td><td class="up">+85.7%</td><td>360</td><td class="up">+50.9%</td><td>10.7%</td><td class="up">+2.9</td></tr>
+      <tr class="warn-row"><td>2026 1Q (개별)</td><td>1,208</td><td class="up">+33.2%</td><td>141</td><td class="up">+68.0%</td><td>149</td><td class="up">+106.4%</td><td>11.7%</td><td class="up">+2.4</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="tnote">
+    * 2025 상반기 순이익 148억원은 <b>지배주주 귀속</b> 기준(반기보고서 명시 147.6억). YoY +38.5%는 보고서 명시 EPS 증가율(602원→834원).
+    <sup class="src">E</sup> 표시는 명시 수치 간 계산으로 도출한 산출치.
+    ⚠ 2026년 1Q부터 종속회사(노바웰스) 지분 처분으로 <b>연결→개별 기준 전환</b> — 전년(연결)과의 YoY는 보고서 표기를 따르되 직접 비교에 한계가 있음(보고서 명시 주의사항).
+  </p>
+
+  <div class="chart-card">
+    <div class="ct">누적 매출액 · 영업이익 · 영업이익률</div>
+    <div class="cs">막대: 매출(좌축, 억원) · 짙은막대: 영업이익(좌축×표시) · 선: 영업이익률(우축, %)</div>
+    <div class="chart-box"><canvas id="chCum"></canvas></div>
+  </div>
+</section>
+
+<!-- ───────────────────────── 02 핵심 재무지표 · 분기별 ───────────────────────── -->
+<section id="s2">
+  <div class="sec-head"><span class="sec-no">02</span><h2>핵심 재무지표 — 분기별(단독) 기준</h2><span class="sec-note">단위: 억원 · 단독 분기 = 누적 − 직전 누적 (대부분 산출치)</span></div>
+
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr>
+      <th>분기</th><th>매출액</th><th>YoY</th><th>영업이익</th><th>YoY</th><th>순이익</th><th>영업이익률</th><th>비고</th>
+    </tr></thead>
+    <tbody>
+      <tr><td>1Q24</td><td>565</td><td class="dn">−18.3%</td><td>35.6</td><td class="dn">−28.3%</td><td>38.7</td><td>6.3%</td><td>명시</td></tr>
+      <tr><td>2Q24</td><td>818<sup class="src">E</sup></td><td class="up">+7.5%<sup class="src">E</sup></td><td>73<sup class="src">E</sup></td><td class="up">+1.0%<sup class="src">E</sup></td><td>71<sup class="src">E</sup></td><td>9.0%<sup class="src">E</sup></td><td>산출 (별도 명시: 812/70/67)</td></tr>
+      <tr><td>3Q24</td><td>773<sup class="src">E</sup></td><td class="dn">−3.9%<sup class="src">E</sup></td><td>55</td><td class="dn">−28.2%<sup class="src">E</sup></td><td>35<sup class="src">E</sup></td><td>7.1%<sup class="src">E</sup></td><td>OP 55억은 보고서 언급</td></tr>
+      <tr><td>4Q24</td><td>821<sup class="src">E</sup></td><td class="up">+7.3%<sup class="src">E</sup></td><td>68<sup class="src">E</sup></td><td class="up">+20.6%<sup class="src">E</sup></td><td>93<sup class="src">E</sup></td><td>8.3%<sup class="src">E</sup></td><td>내수 회복 언급(명시)</td></tr>
+      <tr class="hl"><td>1Q25</td><td>907</td><td class="up">+60.4%</td><td>84</td><td class="up">+136.2%</td><td>72</td><td>9.3%</td><td>명시</td></tr>
+      <tr class="hl"><td>2Q25</td><td>991<sup class="src">E</sup></td><td class="up">+21.2%<sup class="src">E</sup></td><td>110<sup class="src">E</sup></td><td class="up">+50.7%<sup class="src">E</sup></td><td>76<sup class="src">E</sup>*</td><td>11.1%<sup class="src">E</sup></td><td>산출</td></tr>
+      <tr class="hl"><td>3Q25</td><td>1,138<sup class="src">E</sup></td><td class="up">+47.2%<sup class="src">E</sup></td><td>129<sup class="src">E</sup></td><td class="up">+134.5%<sup class="src">E</sup></td><td>126<sup class="src">E</sup></td><td>11.3%<sup class="src">E</sup></td><td>산출</td></tr>
+      <tr class="hl"><td>4Q25</td><td>1,007<sup class="src">E</sup></td><td class="up">+22.7%<sup class="src">E</sup></td><td>108<sup class="src">E</sup></td><td class="up">+58.8%<sup class="src">E</sup></td><td>86<sup class="src">E</sup></td><td>10.7%<sup class="src">E</sup></td><td>산출</td></tr>
+      <tr class="warn-row"><td>1Q26 (개별)</td><td>1,208</td><td class="up">+33.2%</td><td>141</td><td class="up">+68.0%</td><td>149</td><td>11.7%</td><td>명시 · 분기 사상 최대</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="tnote">* 2Q25 순이익은 지배주주 기준 산출(H1 지배 147.6억 − 1Q 지배 71.2억). 2024년 분기 YoY는 2023년 누적치(692/1,453/2,257/3,022억)에서 역산한 전년 분기값 대비 산출. 반올림 차이 ±1~2억원 존재 가능.</p>
+
+  <div class="grid2">
+    <div class="chart-card">
+      <div class="ct">분기별 매출액 &amp; 영업이익률</div>
+      <div class="cs">막대: 분기 매출(억원) · 선: 영업이익률(%) — 6%대→11%대 구조적 개선</div>
+      <div class="chart-box"><canvas id="chQ"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="ct">분기별 영업이익 &amp; 순이익</div>
+      <div class="cs">억원 · 1Q26 순이익(149억)이 영업이익(141억) 상회 — 금융수익 45억 영향(일회성 가능)</div>
+      <div class="chart-box"><canvas id="chQ2"></canvas></div>
+    </div>
+  </div>
+  <div class="note">
+    <b>읽는 법.</b> 2024년은 4개 분기 모두 매출 565~821억원 박스권에 머문 반면, 2025년부터는 매 분기 900억원 이상으로 레벨이 한 단계 올라섰습니다. 영업이익률도 1Q24 6.3% → 1Q26 11.7%로 분기마다 우상향 — 매출 확대에 따른 고정비 레버리지(판관비 증가율 &lt; 매출 증가율)가 핵심 동인입니다.
+  </div>
+</section>
+
+<!-- ───────────────────────── 03 현금흐름 ───────────────────────── -->
+<section id="s3">
+  <div class="sec-head"><span class="sec-no">03</span><h2>현금흐름 — 영업 · 투자 · 재무</h2><span class="sec-note">단위: 억원 · 누적 기준</span></div>
+
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr>
+      <th>기간</th><th>영업활동 CF</th><th>투자활동 CF</th><th>재무활동 CF</th><th>기말 현금</th><th>핵심 코멘트</th>
+    </tr></thead>
+    <tbody>
+      <tr><td>2023 연간</td><td class="up">+253</td><td>+35</td><td class="dn">−253</td><td>302</td><td>차입 상환 집중</td></tr>
+      <tr><td>2024 상반기</td><td class="up">+35</td><td class="dn">−21</td><td class="dn">−71</td><td>248</td><td>장기차입 전액 상환(−121억)</td></tr>
+      <tr class="warn-row"><td>2024 1~3Q</td><td>+12<sup class="src">E</sup></td><td>—</td><td>—</td><td>239</td><td>재고 급증으로 영업CF −83.9% (별도 추정, 보고서 표기)</td></tr>
+      <tr><td>2024 연간</td><td class="up">+133</td><td class="dn">−74</td><td class="dn">−54</td><td>311</td><td>영업CF 전년比 −47% — 재고 +219억이 잠식</td></tr>
+      <tr><td>2025 1Q</td><td class="up">+70</td><td class="dn">−13</td><td class="dn">−1</td><td>366</td><td>이익 급증으로 영업CF 회복</td></tr>
+      <tr class="warn-row"><td>2025 상반기</td><td class="dn">−1.7</td><td>—</td><td>—</td><td>227</td><td>재고 +227억·채권 +151억으로 영업CF ≈ 0</td></tr>
+      <tr class="warn-row"><td>2025 1~3Q</td><td class="dn">−90</td><td class="dn">−60</td><td class="up">+16</td><td>175</td><td>이익↔현금 괴리 정점 (매출채권 902억)</td></tr>
+      <tr class="hl"><td>2025 연간</td><td class="up">+167</td><td class="dn">−81</td><td class="up">+102</td><td>496</td><td>4Q 회수 정상화 + 교환사채 +102억 유입</td></tr>
+      <tr class="hl"><td>2026 1Q</td><td class="up">+107</td><td class="dn">−57</td><td class="dn">−101</td><td>448</td><td>단기차입 100억 상환 · CAPEX 53억(오송 증설)</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="tnote">— 표시는 해당 보고서에 항목 미기재. 2024 1~3Q 영업CF +12억은 보고서가 별도 기준으로 제시한 추정치.</p>
+
+  <div class="chart-card">
+    <div class="ct">활동별 현금흐름 (3대 흐름이 모두 공시된 기간)</div>
+    <div class="cs">억원 · 2025년 3Q까지의 영업CF 적자 → 연간 +167억 반전이 핵심 변곡</div>
+    <div class="chart-box"><canvas id="chCF"></canvas></div>
+  </div>
+  <div class="note warn">
+    <b>이익과 현금의 괴리.</b> 2024~2025년 내내 "이익은 나는데 현금이 안 들어오는" 구조(재고·매출채권 급증)가 반복됐습니다. 2025년 4Q와 2026년 1Q에 영업CF가 +167억/+107억으로 정상화된 점은 긍정적이나, 1Q26에도 매출채권 증가(−130억 효과)가 순이익(149억) 대비 영업CF(107억)를 깎고 있어 회수 사이클은 계속 관찰 대상입니다.
+  </div>
+</section>
+
+<!-- ───────────────────────── 04 재무건전성 ───────────────────────── -->
+<section id="s4">
+  <div class="sec-head"><span class="sec-no">04</span><h2>재무건전성 — 부채비율 · 유동비율 · 자기자본비율</h2><span class="sec-note">각 분기말 기준</span></div>
+
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr>
+      <th>분기말</th><th>부채비율</th><th>유동비율</th><th>자기자본비율</th><th>자산총계(억)</th><th>자본총계(억)</th><th>단기차입금(억)</th>
+    </tr></thead>
+    <tbody>
+      <tr><td>2024.03</td><td>29.6%</td><td>210.1%</td><td>77.1%<sup class="src">E</sup></td><td>2,602</td><td>2,007</td><td>62.5</td></tr>
+      <tr><td>2024.06</td><td>34.9%</td><td>280%*</td><td>74.1%<sup class="src">E</sup></td><td>2,806</td><td>2,079</td><td>200</td></tr>
+      <tr><td>2024.09</td><td>36.0%</td><td>193.6%<sup class="src">E</sup></td><td>73.5%<sup class="src">E</sup></td><td>2,874</td><td>2,113</td><td>300</td></tr>
+      <tr><td>2024.12</td><td>31.5%</td><td>215.4%</td><td>76.1%<sup class="src">E</sup></td><td>2,896</td><td>2,203</td><td>220</td></tr>
+      <tr><td>2025.03</td><td>35.7%</td><td>207.9%</td><td>73.7%<sup class="src">E</sup></td><td>3,038</td><td>2,239</td><td>220</td></tr>
+      <tr><td>2025.06</td><td>37.0%</td><td>210%</td><td>73%</td><td>3,174</td><td>2,318</td><td>230</td></tr>
+      <tr><td>2025.09</td><td>39.9%</td><td>—</td><td>71.5%</td><td>3,416</td><td>2,442</td><td>275</td></tr>
+      <tr><td>2025.12</td><td>41.2%</td><td>226.1%</td><td>70.8%</td><td>3,596</td><td>2,546</td><td>275</td></tr>
+      <tr class="warn-row"><td>2026.03 (개별)</td><td>43.2%</td><td>219.6%<sup class="src">E</sup></td><td>69.8%<sup class="src">E</sup></td><td>3,732</td><td>2,606</td><td>175</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="tnote">* 2024 반기보고서 명시값 280%는 동 보고서의 유동자산(1,372억)/유동부채 구성과 비교 시 다소 높게 표기된 값으로 보임 — 원문 표기 그대로 기재. <sup class="src">E</sup>는 자산·자본·유동항목 명시값으로부터 산출.</p>
+
+  <div class="chart-card">
+    <div class="ct">부채비율 vs 자기자본비율 추이</div>
+    <div class="cs">% · 부채비율 29.6%→43.2% 상승 추세이나 절대 수준은 여전히 매우 낮음(제조업 평균 대비)</div>
+    <div class="chart-box"><canvas id="chStab"></canvas></div>
+  </div>
+  <div class="note">
+    <b>판정.</b> 부채비율 43%·자기자본비율 70%·유동비율 220%는 사실상 무차입에 가까운 우량 구조입니다. 다만 9개 분기 연속으로 부채비율이 우상향(매입채무·단기차입·교환사채 증가)하고 있다는 <b>방향성</b> 자체는 운전자본 부담의 신호로, 절대 수준보다 추세를 모니터링할 필요가 있습니다. 1Q26 단기차입 100억 상환(300→175억)은 개선 신호.
+  </div>
+</section>
+
+<!-- ───────────────────────── 05 판매관리비 ───────────────────────── -->
+<section id="s5">
+  <div class="sec-head"><span class="sec-no">05</span><h2>판매관리비</h2><span class="sec-note">단위: 억원 · 누적 기준 (연결)</span></div>
+
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr>
+      <th>누적 기간</th><th>판관비</th><th>YoY</th><th>판관비율(매출 대비)</th><th>매출 증가율</th><th>레버리지 판정</th>
+    </tr></thead>
+    <tbody>
+      <tr><td>2024 1Q</td><td>43.9</td><td class="dn">+9.2%</td><td>7.8%</td><td class="dn">−18.3%</td><td class="dn">역레버리지 (매출↓ 비용↑)</td></tr>
+      <tr><td>2024 상반기</td><td>100</td><td class="dn">+14.1%</td><td>7.2%<sup class="src">E</sup></td><td class="dn">−4.8%</td><td class="dn">역레버리지</td></tr>
+      <tr><td>2024 1~3Q</td><td>152</td><td class="dn">+14.1%</td><td>7.1%<sup class="src">E</sup></td><td class="dn">−4.5%</td><td class="dn">역레버리지</td></tr>
+      <tr><td>2024 연간</td><td>204</td><td class="dn">+10.8%</td><td>6.8%<sup class="src">E</sup></td><td class="dn">−1.5%</td><td class="dn">역레버리지</td></tr>
+      <tr class="hl"><td>2025 1Q</td><td>53.4</td><td>+21.4%</td><td>5.9%<sup class="src">E</sup></td><td class="up">+60.4%</td><td class="up">정레버리지 (비용↑ &lt;&lt; 매출↑)</td></tr>
+      <tr class="hl"><td>2025 1~3Q</td><td>191<sup class="src">E</sup></td><td>+25.7%<sup class="src">E</sup></td><td>6.3%<sup class="src">E</sup></td><td class="up">+40.8%</td><td class="up">정레버리지</td></tr>
+      <tr class="hl"><td>2025 연간</td><td>268<sup class="src">E</sup></td><td>+31.6%<sup class="src">E</sup></td><td>6.6%<sup class="src">E</sup></td><td class="up">+35.8%</td><td class="nt">중립 (비용↑ ≈ 매출↑)</td></tr>
+      <tr class="warn-row"><td>2026 1Q (개별)</td><td>69</td><td>+28.7%</td><td>5.7%<sup class="src">E</sup></td><td class="up">+33.2%</td><td class="up">정레버리지</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="tnote">2025 누적 판관비는 매출총이익(명시) − 영업이익(명시)으로 산출. 2025 상반기는 보고서에 판관비 별도 미기재로 생략.</p>
+
+  <div class="grid2">
+    <div class="chart-card">
+      <div class="ct">판관비율 추이 (매출 대비 %)</div>
+      <div class="cs">7.8% → 5.7% — 매출 성장이 고정비를 희석하며 이익률 개선의 핵심 동인으로 작동</div>
+      <div class="chart-box"><canvas id="chSGA"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="ct">판관비 주요 항목 (2024 상반기 별도, 억원)</div>
+      <div class="cs">YoY: 경상연구개발비 +28.4% · 대손상각비 +330% · 수출제비용 −48%</div>
+      <div class="chart-box"><canvas id="chSGA2"></canvas></div>
+    </div>
+  </div>
+  <div class="note warn">
+    <b>구성 변화 주의.</b> 2024년 판관비 증가는 ① 경상연구개발비 확대(성장 투자), ② 대손상각비 +330%(채권 건전성 경고), ③ 인건비 증가가 주도. 2026 1Q에도 인건비 중심 +28.7% 증가가 이어지고 있어, 매출 성장 둔화 시 이익률 방어력이 시험대에 오를 수 있습니다.
+  </div>
+</section>
+
+<!-- ───────────────────────── 06 수출 데이터 ───────────────────────── -->
+<section id="s6">
+  <div class="sec-head"><span class="sec-no">06</span><h2>수출 데이터 — 성장의 엔진</h2><span class="sec-note">단위: 억원</span></div>
+
+  <div class="kpis" style="grid-template-columns:repeat(4,1fr)">
+    <div class="kpi"><div class="l">2025 연간 수출액</div><div class="v">1,518<small> 억원</small></div><div class="d up">▲ +66.3% YoY</div></div>
+    <div class="kpi"><div class="l">2025 수출 비중</div><div class="v">37.5<small> %</small></div><div class="d up">2022년 11.8% → 3년 새 3배</div></div>
+    <div class="kpi"><div class="l">수출의 탑 (2025.12)</div><div class="v" style="font-size:17px">7,000만불<br>+ K-food⁺ 1억불</div><div class="d nt">6년 연속 수상</div></div>
+    <div class="kpi"><div class="l">2026 1Q 수출</div><div class="v">435<small> 억원</small></div><div class="d nt">비중 36.0%</div></div>
+  </div>
+
+  <h3>연간 수출 추이 <span class="u">사업보고서 명시</span></h3>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>연도</th><th>내수</th><th>수출</th><th>합계</th><th>수출 비중</th><th>수출 YoY</th><th>수출의 탑</th></tr></thead>
+    <tbody>
+      <tr><td>2022</td><td>2,484</td><td>333</td><td>2,817</td><td>11.8%</td><td>—</td><td>1,000만불</td></tr>
+      <tr><td>2023</td><td>2,272</td><td>749</td><td>3,022</td><td>24.8%</td><td class="up">+125%<sup class="src">E</sup></td><td>3,000만불</td></tr>
+      <tr><td>2024</td><td>2,065</td><td>912</td><td>2,977</td><td>30.6%</td><td class="up">+21.8%</td><td>5,000만불 + K-food</td></tr>
+      <tr class="hl"><td>2025</td><td>2,525<sup class="src">E</sup></td><td>1,518</td><td>4,043</td><td>37.5%</td><td class="up">+66.3%</td><td>7,000만불 + K-food⁺ 1억불</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>분기·누적 단면 <span class="u">각 분기보고서 명시</span></h3>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>시점</th><th>수출액(누적)</th><th>수출 비중</th><th>참고</th></tr></thead>
+    <tbody>
+      <tr><td>2024 1Q</td><td>169</td><td>29.9%</td><td>내수 396억 급감 속 수출이 방어</td></tr>
+      <tr><td>2024 1~3Q</td><td>664<sup class="src">E</sup></td><td>30.8%</td><td>제품수출 663.5억 + 상품수출 0.6억</td></tr>
+      <tr><td>2025 1Q</td><td>314</td><td>34.6%</td><td>내수·수출 동반 성장 전환</td></tr>
+      <tr><td>2025 상반기</td><td>774</td><td>40.8%</td><td>반기 만에 2024 연간의 85% 도달</td></tr>
+      <tr><td>2025 1~3Q</td><td>1,227</td><td>40.4%</td><td>지역별(별도): 아시아 1,083 · 미국 등 68</td></tr>
+      <tr class="warn-row"><td>2026 1Q</td><td>435</td><td>36.0%</td><td>내수 773억(+) 동반 고성장으로 비중은 소폭 하락</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="chart-card">
+    <div class="ct">내수 vs 수출 — 연간 구성 변화</div>
+    <div class="cs">억원 · 내수 3년 연속 감소(2,484→2,065) 후 2025년 반등, 수출은 4년 연속 고성장</div>
+    <div class="chart-box"><canvas id="chExp"></canvas></div>
+  </div>
+  <div class="note">
+    <b>해석.</b> 2022~2024년의 '내수 부진 + 수출이 메우는' 구조에서, 2025년부터는 <b>내수·수출 동반 성장</b>으로 질이 바뀌었습니다. 수출의 핵심은 태국·필리핀 등 동남아 유산균 제품과 글로벌 브랜드(GNC 등) OEM 물량(보고서 언급)이며, 2025년 3Q 기준 아시아 비중이 수출의 대부분(1,083/1,151억)을 차지 — 중국·동남아 경기와 환율에 대한 민감도가 구조적으로 높아졌습니다.
+  </div>
+</section>
+
+<!-- ───────────────────────── 07 리스크 요인 ───────────────────────── -->
+<section id="s7">
+  <div class="sec-head"><span class="sec-no">07</span><h2>경영진·보고서 언급 리스크 요인</h2><span class="sec-note">사업·분기보고서 기재 사항 기반 5선</span></div>
+  <div class="risk-grid">
+    <div class="risk-card">
+      <div class="rt"><span class="badge b-high">HIGH</span><span class="rn">① 생산능력 포화 — 증설 지연 시 성장 제약</span></div>
+      <p>2025년 가동률 <b>104.5%</b>(2023년 79.4% → 2024년 76.6%)로 설비 한계 초과. 오송 제2공장 증설·오창1공장 리모델링 추진 중이며 교환사채 자금 87.6억원이 시설투자 용도로 지정. 완공 지연 시 2026~27년 매출 성장이 물리적으로 제한.</p>
+      <div class="quote">출처: 2025 사업보고서 — "증설이 향후 성장의 핵심 선결 조건"</div>
+    </div>
+    <div class="risk-card">
+      <div class="rt"><span class="badge b-high">HIGH</span><span class="rn">② 운전자본 — 재고·매출채권 변동성</span></div>
+      <p>재고자산 343억(23년말)→562→756억(25년말, +64%/+34%), 매출채권 843→<b>1,126억</b>(26.1Q, +33.5%, 3개월 초과 27%). 2025년 3Q 누적 영업CF −90억까지 악화된 전력. 25년 상반기 재고평가손실 약 25억원 기인식.</p>
+      <div class="quote">출처: 각 분기보고서 — "재고 소진·채권 회수 모니터링 필요" 반복 기재</div>
+    </div>
+    <div class="risk-card">
+      <div class="rt"><span class="badge b-mid">MID</span><span class="rn">③ 고객 집중도 — 상위 2개사가 매출 44%</span></div>
+      <p>2025년 3Q 기준 고객A 33% + 고객B 11% = <b>44.2%</b>. B2B ODM 구조상 주요 거래처의 발주 조정·자체생산 전환 시 매출 변동성이 크게 확대. 수출의 상당분이 특정 글로벌 브랜드 중국향 물량에 연동.</p>
+      <div class="quote">출처: 2025 3Q 분기보고서 — 주요 매출처 집중 기재</div>
+    </div>
+    <div class="risk-card">
+      <div class="rt"><span class="badge b-mid">MID</span><span class="rn">④ 환율·원재료 해외 의존</span></div>
+      <p>코엔자임Q10(중국산) 등 핵심 원재료의 해외 조달 의존. 수출 비중 37.5% 확대로 원/달러 변동이 매출과 원가 양쪽에 작용. 보호무역주의·글로벌 공급망 재편이 원가 상승 압박 요인.</p>
+      <div class="quote">출처: 2024·2025 사업보고서 — 환율·원재료 리스크 명시</div>
+    </div>
+    <div class="risk-card">
+      <div class="rt"><span class="badge b-mid">MID</span><span class="rn">⑤ 교환사채 희석 + 지배구조 집중</span></div>
+      <p>자기주식 50만주 대상 EB(교환가 17,515원, 만기 2030.6) — 잠재 희석 약 2.7%. 최대주주·특수관계인 32.01%, 사내이사 5인 중 2인이 특수관계인. 2026년 3월 권수혜 대표이사 신규 선임 등 2세 경영 전환 진행.</p>
+      <div class="quote">출처: 2026 1Q 분기보고서 — 희석 EPS 806원(기본 823원) 명시</div>
+    </div>
+    <div class="risk-card">
+      <div class="rt"><span class="badge b-low">참고</span><span class="rn">⑥ 내수 시장 성숙 (구조적 배경)</span></div>
+      <p>국내 건강기능식품 시장 약 6조원대 정체, 업체 수 600개+ 경쟁 심화. 2022~24년 내수 3년 연속 감소가 회사 실적 부진의 근본 원인이었음. 2025년 반등이 추세인지 일시적인지가 중기 변수.</p>
+      <div class="quote">출처: 2025 3Q 분기보고서 — 시장 2년 연속 소폭 감소 기재</div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────────────────── 08 일회성 요인 ───────────────────────── -->
+<section id="s8">
+  <div class="sec-head"><span class="sec-no">08</span><h2>주목할 변화 · 일회성 요인 타임라인</h2></div>
+  <div class="tl">
+    <div class="tl-item caution">
+      <div class="td">2024 연중</div><div class="tt">재고자산 +64% 급증 (343→562억) · 단기차입 +96%</div>
+      <p>영업CF가 253→133억(−47%)으로 급감한 직접 원인. 이후 2025년 매출 급증으로 '성수기 선행 재고'였음이 사후 확인 — 당시에는 최대 리스크로 지목.</p>
+    </div>
+    <div class="tl-item">
+      <div class="td">2024.12</div><div class="tt">금융수익 2배 증가 (41.7→83.9억) → 순이익이 영업이익 역전 구간</div>
+      <p>2024년 영업이익 −9.1%에도 순이익 +8.5%가 된 배경. 고금리 환경의 이자수익 — 영업 외 기여로 지속성 한계.</p>
+    </div>
+    <div class="tl-item">
+      <div class="td">2025.12</div><div class="tt">교환사채 63억 발행 (0% 금리, 자기주식 50만주 대상, 교환가 17,515원)</div>
+      <p>시설투자(오송 증설) 재원. 재무CF +102억 유입의 주요인. 2030년까지 약 2.7% 잠재 희석.</p>
+    </div>
+    <div class="tl-item">
+      <div class="td">2025 결산</div><div class="tt">배당 2배 인상: 주당 200원 → 400원 (배당성향 20.1%)</div>
+      <p>5년간 200원 동결을 깬 의미 있는 주주환원 확대. 시가배당률 2.8%(보고서 기준).</p>
+    </div>
+    <div class="tl-item">
+      <div class="td">2026.03.31</div><div class="tt">자기주식 50만주 이익소각 — 발행주식 18,254,848주로 감소</div>
+      <p>EB 희석분을 상쇄하는 구조. 소각 후 자사주 2.74% 보유.</p>
+    </div>
+    <div class="tl-item neg">
+      <div class="td">2026 1Q</div><div class="tt">⚠ 연결→개별 기준 전환 (노바웰스 지분 처분) + 금융수익 45억(+532%)</div>
+      <p>① 전기·전전기와 YoY 직접 비교 불가(보고서 명시 주의). ② 1Q 순이익 149억 중 금융수익 45억은 일회성 성격이 강해 <b>영업이익(141억) 기준 평가가 적절</b>(보고서 자체 권고).</p>
+    </div>
+    <div class="tl-item caution">
+      <div class="td">2026.03</div><div class="tt">경영진 개편 — 권수혜 대표이사 신규 선임 · 외부감사인 삼일→삼정 변경(26~28년)</div>
+      <p>오너 2세 경영 전환과 감사인 강제 교체가 동시 진행. 회계 연속성 관찰 포인트.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────────────────── 09 분기별 요약 ───────────────────────── -->
+<section id="s9">
+  <div class="sec-head"><span class="sec-no">09</span><h2>분기별 핵심 요약 — 9개 분기 한눈에</h2></div>
+  <div class="q-grid">
+    <div class="q-card"><div class="qh"><span class="qn">1Q24</span><span class="qv dn">매출 −18.3%</span></div>
+      <p>내수 급감으로 매출 565억 쇼크. 재고 +88억 적체 시작. 부채비율 29.6%의 재무 체력만 견고. 의견: 관망.</p></div>
+    <div class="q-card"><div class="qh"><span class="qn">2Q24</span><span class="qv nt">매출 −4.8% (반기)</span></div>
+      <p>매출 감소 폭 축소, 장기차입 전액 상환. 대손상각비 +330%·재고 +49% 등 질적 경고음. 노바웰스 +28.6% 성장.</p></div>
+    <div class="q-card"><div class="qh"><span class="qn">3Q24</span><span class="qv dn">영업CF +12억</span></div>
+      <p>재고 563억(+64%)·단기차입 300억·영업CF −84%의 '리스크 트리플'. 수출 비중 30.8% 돌파가 유일한 위안. HOLD.</p></div>
+    <div class="q-card"><div class="qh"><span class="qn">4Q24</span><span class="qv up">순이익 +8.5%</span></div>
+      <p>연간 매출 −1.5%로 선방, 금융수익이 순이익 견인. 5,000만불 수출탑. 4Q부터 내수 회복 공식 언급 — 턴어라운드 예고편.</p></div>
+    <div class="q-card"><div class="qh"><span class="qn">1Q25</span><span class="qv up">매출 +60.4%</span></div>
+      <p>역대급 1분기: 영업이익 +136%, 영업CF +70억 회복. 2024년 쌓은 재고가 매출로 전환되며 우려가 한 번에 해소.</p></div>
+    <div class="q-card"><div class="qh"><span class="qn">2Q25</span><span class="qv up">OPM 10.2% (반기)</span></div>
+      <p>반기 매출 1,898억·수출 비중 40.8%. 단, 재고 765억·영업CF ≈ 0 — 성장의 그림자(운전자본)도 함께 커짐.</p></div>
+    <div class="q-card"><div class="qh"><span class="qn">3Q25</span><span class="qv up">누적 OP +97%</span></div>
+      <p>9개월 만에 전년 연간 순이익 초과. 가동률 103.9% 풀가동. 영업CF −90억·채권 902억은 최대 리스크로 부각. 주가 6개월 +108%.</p></div>
+    <div class="q-card"><div class="qh"><span class="qn">4Q25</span><span class="qv up">연 매출 4,043억</span></div>
+      <p>창사 최초 매출 4,000억·수출 1억달러 돌파. 영업CF +167억 정상화, 배당 2배 인상. 가동률 104.5% — 증설이 다음 관문.</p></div>
+    <div class="q-card"><div class="qh"><span class="qn">1Q26</span><span class="qv up">OPM 11.7%</span></div>
+      <p>분기 사상 최대(매출 1,208억). 개별 기준 전환·금융수익 45억 일회성에 유의. 단기차입 100억 상환, 자사주 50만주 소각 완료.</p></div>
+  </div>
+</section>
+
+<!-- ───────────────────────── 10 주가 & 밸류에이션 ───────────────────────── -->
+<section id="s10">
+  <div class="sec-head"><span class="sec-no">10</span><h2>주가 흐름 &amp; PER · PSR 투자 적합도</h2><span class="sec-note">주가·전망치는 외부(웹) 자료 포함</span></div>
+
+  <div class="chart-card">
+    <div class="ct">주가 흐름 (2024.01 ~ 2026.05)</div>
+    <div class="cs">원 · ●24년·25년 4~9월: 분기보고서 기재 월평균가 / ◆그 외: 외부 시세·뉴스 시점가(웹) — 척도 혼용 주의</div>
+    <div class="chart-box"><canvas id="chPx"></canvas></div>
+  </div>
+
+  <div class="tbl-wrap" style="margin-top:16px">
+  <table>
+    <thead><tr><th>국면</th><th>기간</th><th>주가 흐름</th><th>드라이버</th></tr></thead>
+    <tbody>
+      <tr><td>① 실적 부진 박스권</td><td>2024.01~2025.03</td><td>12,900 → 9,600원대</td><td>내수 쇼크·재고 급증 — 매출 −18% 분기에 주가도 −25%</td></tr>
+      <tr class="hl"><td>② 실적 리레이팅</td><td>2025.04~09</td><td>9,606 → 20,028원 (월평균, +108%)</td><td>1Q25 어닝서프라이즈(+60%/+136%)와 분기 연속 서프라이즈</td></tr>
+      <tr><td>③ 차익실현 조정</td><td>2025.10~2026.01</td><td>22,100(고점) → 12,500원대</td><td>영업CF −90억·채권 급증 우려 + 단기 급등 피로</td></tr>
+      <tr class="warn-row"><td>④ 재차 회복 시도</td><td>2026.02~05</td><td>12,500 → 15,770원 (26.5.28)</td><td>1Q26 사상 최대 실적 + 자사주 소각 · 52주 11,500~22,100원</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>밸류에이션 테이블 <span class="u">기준주가 15,770원 (2026.5.28, 한경 시세) · 모든 배수는 산출치<sup class="src">E</sup></span></h3>
+  <div class="val-grid">
+    <div class="val-card"><div class="l">시가총액<sup class="src">E</sup></div><div class="v">≈ 2,879억</div><div class="s">15,770원 × 18,254,848주(소각 후)</div></div>
+    <div class="val-card"><div class="l">PER (2025 실적)<sup class="src">E</sup></div><div class="v">7.9배</div><div class="s">EPS 2,000원 (사업보고서 명시)</div></div>
+    <div class="val-card"><div class="l">PER (최근 4개분기)<sup class="src">E</sup></div><div class="v">≈ 6.6배</div><div class="s">LTM 순이익 ≈ 437억 (연결·개별 혼합 주의)</div></div>
+    <div class="val-card"><div class="l">PER (2026E 컨센서스)<sup class="src">E</sup></div><div class="v">≈ 6배 내외</div><div class="s">DS투자증권 목표가 26,000원 = 26E PER 10배 적용</div></div>
+    <div class="val-card"><div class="l">PSR (2025 매출)<sup class="src">E</sup></div><div class="v">0.71배</div><div class="s">2,879억 / 4,043억</div></div>
+    <div class="val-card"><div class="l">PSR (LTM)<sup class="src">E</sup></div><div class="v">0.66배</div><div class="s">LTM 매출 ≈ 4,344억</div></div>
+    <div class="val-card"><div class="l">PSR (2026E)<sup class="src">E</sup></div><div class="v">0.60배</div><div class="s">증권사 26E 매출 4,816억 기준</div></div>
+    <div class="val-card"><div class="l">배당수익률<sup class="src">E</sup></div><div class="v">2.5%</div><div class="s">주당 400원 / 15,770원</div></div>
+  </div>
+
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>비교 축</th><th>노바렉스</th><th>비교 기준</th><th>해석</th></tr></thead>
+    <tbody>
+      <tr><td>PER vs 성장률</td><td>7~8배 (25년 EPS +54%)</td><td>PEG ≈ 0.15<sup class="src">E</sup></td><td class="up">성장 대비 뚜렷한 저평가 구간</td></tr>
+      <tr><td>PER vs 업종</td><td>7~8배</td><td>건기식 ODM 평균 15~25배(25년 반기보고서 언급) / 증권사 적용 10배</td><td class="up">보수적 배수 기준으로도 할인 거래</td></tr>
+      <tr><td>PSR vs 마진</td><td>0.6~0.7배</td><td>OPM 10.7%→11%대 개선 중</td><td class="up">이익률 상승 국면의 PSR 1배 미만은 우호적</td></tr>
+      <tr><td>주가 vs EB 교환가</td><td>15,770원</td><td>교환가 17,515원</td><td class="nt">현 주가에선 희석 압력 제한적</td></tr>
+      <tr><td>주가 vs 증권사 목표가</td><td>15,770원</td><td>26,000원 (DS투자증권, 26.5.18)</td><td class="up">괴리율 약 +65%<sup class="src">E</sup></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="verdict">
+    <h3>투자 적합도 종합 — "숫자는 싸고, 리스크는 현금흐름에 있다"</h3>
+    <p>
+      <b style="color:#fff">밸류에이션 관점:</b> 2025년 실적 기준 PER 7.9배·PSR 0.71배는, 매출 +36%·영업이익 +86% 성장과 OPM 11%대 진입이라는 펀더멘털 대비 명백히 보수적인 가격입니다. 2026년 1분기에도 +33%/+68% 성장이 이어졌고 증권사 26E 전망(매출 4,816억) 기준 PSR은 0.6배까지 내려갑니다. 자사주 소각·배당 2배 인상으로 주주환원도 강화되는 추세입니다.
+    </p>
+    <p style="margin-top:10px">
+      <b style="color:#fff">단, 멀티플 할인에는 이유가 있습니다:</b> ① 상위 2개 고객 44% 집중의 ODM 사업 특성, ② 분기마다 반복되는 운전자본(재고·채권) 출렁임과 이익-현금 괴리, ③ 가동률 104.5% 포화로 증설 완공 전까지 성장 상단이 제한, ④ 1Q26 순이익의 금융수익(45억) 일회성. 따라서 <b style="color:#fff">순이익 기반 PER보다 영업이익·영업현금흐름 기준으로 보수적으로 평가</b>하는 것이 적절하며, 그 기준으로도 현 주가는 성장주보다 가치주에 가까운 가격대입니다.
+    </p>
+    <p style="margin-top:10px">
+      <b style="color:#fff">체크리스트:</b> 오송 제2공장 증설 일정 확정 → 매출채권 회수 정상화(분기 영업CF 100억+ 유지) → 고객 다변화 진전. 이 세 가지가 확인될수록 업종 평균(10배+)으로의 리레이팅 여지가 열립니다.
+    </p>
+    <span class="pill">2025 PER 7.9배</span><span class="pill">PSR 0.71배</span><span class="pill">배당수익률 2.5%</span><span class="pill y">영업CF 변동성 주시</span><span class="pill y">고객집중 44%</span>
+  </div>
+  <p class="tnote">본 섹션의 주가·목표주가·2026년 전망치는 외부 공개 자료(한경 시세 2026.5.28, Investing.com, DS투자증권 리포트 보도 2026.5.18) 기반이며, 배수는 모두 본 분석의 산출치입니다. 투자 권유가 아닌 참고 자료입니다.</p>
+</section>
+
+</div><!-- /wrap -->
+
+<footer>
+  <div class="wrap">
+    데이터 출처 — ㈜노바렉스 DART 공시: 2024년 1Q·반기·3Q 분기보고서, 2024 사업보고서(제17기), 2025년 1Q·반기·3Q 분기보고서, 2025 사업보고서(제18기), 2026년 1Q 분기보고서(제19기, 2026.05.15 제출)<br>
+    외부 자료 — 한국경제 시세(2026.05.28), Investing.com(2025.10 시세·2026.05 자사주 소각 공시 뉴스), DS투자증권 리포트 보도(2026.05.18)<br>
+    단위: 별도 표기 없으면 억원 · 연결 기준(2026년 1Q부터 개별) · <span class="tag-e">E</span> = 산출/추정치 · 반올림 차이 존재 가능<br>
+    본 리포트는 투자 참고용 정보 제공 자료이며 투자 권유가 아닙니다. 투자 판단과 결과의 책임은 투자자 본인에게 있습니다.
+  </div>
+</footer>
+
+<script>
+const C = {green:'#1E6B4F', greenL:'rgba(30,107,79,0.18)', red:'#C2452D', gold:'#B07F23', navy:'#27435C', ink:'#15241F', muted:'#67766E', grid:'#E3EAE4'};
+Chart.defaults.font.family = "'IBM Plex Mono','IBM Plex Sans KR',monospace";
+Chart.defaults.font.size = 11;
+Chart.defaults.color = C.muted;
+
+// 01 누적
+new Chart(document.getElementById('chCum'),{
+  data:{labels:['1Q24','24H1','24·3Q','2024년','1Q25','25H1','25·3Q','2025년','1Q26'],
+  datasets:[
+    {type:'bar',label:'매출(누적, 억원)',data:[565,1383,2156,2977,907,1898,3036,4043,1208],backgroundColor:['#C7D8CE','#C7D8CE','#C7D8CE','#C7D8CE',C.green,C.green,C.green,C.green,C.gold],yAxisID:'y'},
+    {type:'bar',label:'영업이익(누적, 억원)',data:[35.6,109,164,232,84,194,323,431,141],backgroundColor:C.ink,yAxisID:'y',barPercentage:0.45},
+    {type:'line',label:'영업이익률(%)',data:[6.3,7.9,7.6,7.8,9.3,10.2,10.7,10.7,11.7],borderColor:C.red,backgroundColor:C.red,yAxisID:'y2',tension:0.25,pointRadius:4}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    scales:{y:{grid:{color:C.grid},title:{display:true,text:'억원'}},y2:{position:'right',grid:{display:false},min:0,max:14,title:{display:true,text:'%'}}},
+    plugins:{legend:{position:'bottom'}}}
+});
+
+// 02 분기 매출+OPM
+new Chart(document.getElementById('chQ'),{
+  data:{labels:['1Q24','2Q24ᴱ','3Q24ᴱ','4Q24ᴱ','1Q25','2Q25ᴱ','3Q25ᴱ','4Q25ᴱ','1Q26'],
+  datasets:[
+    {type:'bar',label:'분기 매출(억원)',data:[565,818,773,821,907,991,1138,1007,1208],
+     backgroundColor:['#C7D8CE','#C7D8CE','#C7D8CE','#C7D8CE',C.green,C.green,C.green,C.green,C.gold],yAxisID:'y'},
+    {type:'line',label:'영업이익률(%)',data:[6.3,9.0,7.1,8.3,9.3,11.1,11.3,10.7,11.7],borderColor:C.red,backgroundColor:C.red,yAxisID:'y2',tension:0.25,pointRadius:4}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    scales:{y:{grid:{color:C.grid},title:{display:true,text:'억원'}},y2:{position:'right',grid:{display:false},min:0,max:14,title:{display:true,text:'%'}}},
+    plugins:{legend:{position:'bottom'}}}
+});
+
+// 02 분기 OP & NI
+new Chart(document.getElementById('chQ2'),{
+  type:'bar',
+  data:{labels:['1Q24','2Q24ᴱ','3Q24ᴱ','4Q24ᴱ','1Q25','2Q25ᴱ','3Q25ᴱ','4Q25ᴱ','1Q26'],
+  datasets:[
+    {label:'영업이익(억원)',data:[35.6,73,55,68,84,110,129,108,141],backgroundColor:C.green},
+    {label:'순이익(억원)',data:[38.7,71,35,93,72,76,126,86,149],backgroundColor:C.navy}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    scales:{y:{grid:{color:C.grid},title:{display:true,text:'억원'}}},
+    plugins:{legend:{position:'bottom'}}}
+});
+
+// 03 현금흐름
+new Chart(document.getElementById('chCF'),{
+  type:'bar',
+  data:{labels:['2023년','24H1','2024년','1Q25','25·3Q','2025년','1Q26'],
+  datasets:[
+    {label:'영업활동',data:[253,35,133,70,-90,167,107],backgroundColor:C.green},
+    {label:'투자활동',data:[35,-21,-74,-13,-60,-81,-57],backgroundColor:C.gold},
+    {label:'재무활동',data:[-253,-71,-54,-1,16,102,-101],backgroundColor:C.navy}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    scales:{y:{grid:{color:C.grid},title:{display:true,text:'억원'}}},
+    plugins:{legend:{position:'bottom'}}}
+});
+
+// 04 건전성
+new Chart(document.getElementById('chStab'),{
+  type:'line',
+  data:{labels:['24.03','24.06','24.09','24.12','25.03','25.06','25.09','25.12','26.03'],
+  datasets:[
+    {label:'부채비율(%)',data:[29.6,34.9,36.0,31.5,35.7,37.0,39.9,41.2,43.2],borderColor:C.red,backgroundColor:'rgba(194,69,45,0.10)',fill:true,tension:0.25,pointRadius:4},
+    {label:'자기자본비율(%)',data:[77.1,74.1,73.5,76.1,73.7,73.0,71.5,70.8,69.8],borderColor:C.green,backgroundColor:C.greenL,fill:false,tension:0.25,pointRadius:4}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    scales:{y:{grid:{color:C.grid},min:20,max:85,title:{display:true,text:'%'}}},
+    plugins:{legend:{position:'bottom'}}}
+});
+
+// 05 판관비율
+new Chart(document.getElementById('chSGA'),{
+  type:'line',
+  data:{labels:['1Q24','24H1','24·3Q','2024년','1Q25','25·3Qᴱ','2025년ᴱ','1Q26'],
+  datasets:[{label:'판관비율(%)',data:[7.8,7.2,7.1,6.8,5.9,6.3,6.6,5.7],borderColor:C.green,backgroundColor:C.greenL,fill:true,tension:0.3,pointRadius:4}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    scales:{y:{grid:{color:C.grid},min:4,max:9,title:{display:true,text:'%'}}},
+    plugins:{legend:{position:'bottom'}}}
+});
+
+// 05 판관비 항목
+new Chart(document.getElementById('chSGA2'),{
+  type:'bar',
+  data:{labels:['급여','경상연구개발비','지급수수료','운반비','대손상각비','수출제비용'],
+  datasets:[
+    {label:'2024 상반기',data:[28.7,18.8,8.2,5.0,3.3,3.3],backgroundColor:C.green},
+    {label:'2023 상반기',data:[25.3,14.6,7.6,5.0,0.8,6.3],backgroundColor:'#C7D8CE'}
+  ]},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    scales:{x:{grid:{color:C.grid},title:{display:true,text:'억원 (별도 기준)'}}},
+    plugins:{legend:{position:'bottom'}}}
+});
+
+// 06 수출
+new Chart(document.getElementById('chExp'),{
+  data:{labels:['2022','2023','2024','2025'],
+  datasets:[
+    {type:'bar',label:'내수(억원)',data:[2484,2272,2065,2525],backgroundColor:'#C7D8CE',stack:'s'},
+    {type:'bar',label:'수출(억원)',data:[333,749,912,1518],backgroundColor:C.green,stack:'s'},
+    {type:'line',label:'수출 비중(%)',data:[11.8,24.8,30.6,37.5],borderColor:C.red,backgroundColor:C.red,yAxisID:'y2',tension:0.25,pointRadius:4}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    scales:{y:{stacked:true,grid:{color:C.grid},title:{display:true,text:'억원'}},y2:{position:'right',grid:{display:false},min:0,max:50,title:{display:true,text:'%'}}},
+    plugins:{legend:{position:'bottom'}}}
+});
+
+// 10 주가
+const pxLabels=['24.01','24.02','24.03','24.04','24.05','24.06','25.04','25.05','25.06','25.07','25.08','25.09','25.10','26.01','26.04','26.05'];
+const pxData=[11763,10349,9756,9677,9663,10014,9606,14167,17905,19810,19604,20028,19050,12500,14100,15770];
+const reportPts=new Set([0,1,2,3,4,5,6,7,8,9,10,11]);
+new Chart(document.getElementById('chPx'),{
+  type:'line',
+  data:{labels:pxLabels,datasets:[{
+    label:'주가(원)',data:pxData,borderColor:C.navy,backgroundColor:'rgba(39,67,92,0.08)',fill:true,tension:0.3,
+    pointRadius:5,
+    pointStyle:pxLabels.map((_,i)=>reportPts.has(i)?'circle':'rectRot'),
+    pointBackgroundColor:pxLabels.map((_,i)=>reportPts.has(i)?C.green:C.gold)
+  }]},
+  options:{responsive:true,maintainAspectRatio:false,
+    scales:{y:{grid:{color:C.grid},title:{display:true,text:'원'}}},
+    plugins:{legend:{display:false},
+      tooltip:{callbacks:{footer:(items)=>reportPts.has(items[0].dataIndex)?'분기보고서 월평균가':'외부 시세/뉴스 시점가(웹)'}}}}
+});
+</script>
+</body>
+</html>
